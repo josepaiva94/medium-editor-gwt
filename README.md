@@ -33,36 +33,6 @@ Deploy GWT
 mvn gwt:package-lib deploy
 ```
 
-## Development
-
-To run the demo locally:
-
-1. Clone this repo locally
-2. Run `npm install` from your console at the root
-3. Run `node index.js` from the root
-4. Navigate to `http://localhost:8088/demo/index.html` to view the demo
-
-MediumEditor development tasks are managed by Grunt. To install all the necessary packages, just invoke:
-
-```bash
-npm install
-```
-
-To run all the test and build the dist files for testing on demo pages, just invoke:
-```bash
-grunt
-```
-
-These are the other available grunt tasks:
-
-* __js__: runs jslint and jasmine tests and creates minified and concatenated versions of the script;
-* __css__: runs autoprefixer and csslint
-* __test__: runs jasmine tests, jslint and csslint
-* __watch__: watch for modifications on script/scss files
-* __spec__: runs a task against a specified file
-
-The source files are located inside the __src__ directory.  Be sure to make changes to these files and not files in the dist directory.
-
 ## Contributing
 
 [Kill some bugs :)](https://github.com/josepaiva94/medium-editor-gwt/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
