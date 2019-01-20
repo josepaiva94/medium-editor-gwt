@@ -28,32 +28,7 @@ public interface Resources extends ClientBundle {
     @Source("js/rangy-classapplier.min.js")
     TextResource rangyClassApplierJs();
 
-    /* Themes CSS */
-    /*@Source("css/themes/beagle.css")
-    @CssResource.NotStrict
-    CssResource beagleCss();
-
-    @Source("css/themes/bootstrap.css")
-    @CssResource.NotStrict
-    CssResource bootstrapCss();
-
-    @Source("css/themes/default.css")
-    @CssResource.NotStrict
-    CssResource defaultCss();
-
-    @Source("css/themes/flat.css")
-    @CssResource.NotStrict
-    CssResource flatCss();
-
-    @Source("css/themes/mani.css")
-    @CssResource.NotStrict
-    CssResource maniCss();
-
-    @Source("css/themes/roman.css")
-    @CssResource.NotStrict
-    CssResource romanCss();
-
-    @Source("css/themes/tim.css")
-    @CssResource.NotStrict
-    CssResource timCss();*/
+    /* JSON configs */
+    @Source("emotions.json")
+    TextResource emotionsJson();
 }

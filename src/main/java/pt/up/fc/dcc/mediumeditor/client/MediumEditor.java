@@ -42,37 +42,7 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
 
         if (loaded)
             editor = init(selector, options);
-
-        /*loadTheme(theme);*/
     }
-
-    /*private void loadTheme(Theme theme) {
-
-        switch (theme) {
-
-            case BEAGLE:
-                Resources.INSTANCE.beagleCss().ensureInjected();
-                break;
-            case BOOTSTRAP:
-                Resources.INSTANCE.bootstrapCss().ensureInjected();
-                break;
-            case FLAT:
-                Resources.INSTANCE.flatCss().ensureInjected();
-                break;
-            case MANI:
-                Resources.INSTANCE.maniCss().ensureInjected();
-                break;
-            case ROMAN:
-                Resources.INSTANCE.romanCss().ensureInjected();
-                break;
-            case TIM:
-                Resources.INSTANCE.timCss().ensureInjected();
-                break;
-            default:
-                Resources.INSTANCE.defaultCss().ensureInjected();
-                break;
-        }
-    }*/
 
     @Override
     protected void onLoad() {
@@ -119,6 +89,8 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
     @Override
     public void setHTML(String html) {
         editorElement.setInnerHTML(html);
+        if (loaded)
+            checkContentChanged();
     }
 
     @Override
@@ -135,4 +107,9 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
     public void onResize() {
 
     }
+
+    public final native void checkContentChanged() /*-{
+
+        this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editor.checkContentChanged();
+    }-*/;
 }

@@ -5190,7 +5190,10 @@ MediumEditor.extensions = {};
         _removeEmotionHighlight: function (el) {
             var elementAttrs = {};
             this.emotions.levels.forEach(function (level) {
-                elementAttrs['data-' + level] = el.getAttribute('data-' + level);
+                var attrValue = el.getAttribute('data-' + level);
+                if (attrValue) {
+                    elementAttrs['data-' + level] = attrValue;
+                }
             });
             elementAttrs['data-preview'] = el.getAttribute('data-preview');
 

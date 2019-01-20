@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to="mediumeditorgwt">
   <inherits name='com.google.gwt.user.User'/>
-  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
 
   <!-- Specify the app entry point class -->
-  <entry-point class='pt.up.fc.dcc.mediumeditor.client.MediumEditorTest'/>
+  <!--<entry-point class='pt.up.fc.dcc.mediumeditor.client.MediumEditorTest'/>-->
 
   <source path='client'/>
 
