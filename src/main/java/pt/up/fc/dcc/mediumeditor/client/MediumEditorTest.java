@@ -18,8 +18,6 @@ public class MediumEditorTest implements EntryPoint {
     @Override
     public void onModuleLoad() {
 
-        Window.alert(" --- ");
-
         EditorOptions editorOptions = JavaScriptObject.createObject().cast();
 
         ToolbarOptions toolbarOptions = JavaScriptObject.createObject().cast();
