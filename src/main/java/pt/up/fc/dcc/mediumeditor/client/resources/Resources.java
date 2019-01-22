@@ -17,7 +17,7 @@ public interface Resources extends ClientBundle {
     @Source("js/medium-editor.min.js")
     TextResource mediumEditorJs();
 
-    @Source("css/medium-editor.css")
+    @Source("css/medium-editor.min.gss")
     @CssResource.NotStrict
     CssResource mediumEditorCss();
 

@@ -95,7 +95,7 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
 
     @Override
     public String getText() {
-        return editorElement.getInnerText();
+        return getTextWithNewLines();
     }
 
     @Override
@@ -107,6 +107,15 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
     public void onResize() {
 
     }
+
+    private final native String getTextWithNewLines() /*-{
+
+        var editor = this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editorElement;
+        var ps = editor.querySelectorAll('p');
+        return Array.prototype.slice.call(ps)
+            .map(function (p) { return p.innerText.replace(/<br\s*[\/]?>/gi, '\n'); })
+            .join('\n\n');
+    }-*/;
 
     public final native void checkContentChanged() /*-{
 

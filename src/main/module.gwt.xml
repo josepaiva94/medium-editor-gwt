@@ -3,7 +3,7 @@
   <inherits name='com.google.gwt.user.User'/>
 
   <!-- Specify the app entry point class -->
-  <!--<entry-point class='pt.up.fc.dcc.mediumeditor.client.MediumEditorTest'/>-->
+  <entry-point class='pt.up.fc.dcc.mediumeditor.client.MediumEditorTest'/>
 
   <source path='client'/>
 
@@ -11,4 +11,7 @@
 
   <!-- Only support recent browsers -->
   <set-property name="user.agent" value="ie10,gecko1_8,safari"/>
+
+  <!-- enable GSS -->
+  <!--<set-configuration-property name="CssResource.enableGss" value="true" />-->
 </module>

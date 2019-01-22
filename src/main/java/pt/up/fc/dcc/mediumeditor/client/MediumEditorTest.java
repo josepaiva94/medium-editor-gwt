@@ -3,10 +3,14 @@ package pt.up.fc.dcc.mediumeditor.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import pt.up.fc.dcc.mediumeditor.client.models.EditorOptions;
 import pt.up.fc.dcc.mediumeditor.client.models.ToolbarOptions;
 import pt.up.fc.dcc.mediumeditor.client.resources.Resources;
+
+import java.util.logging.Logger;
 
 /**
  * Entry point for testing Medium Editor
@@ -52,5 +56,12 @@ public class MediumEditorTest implements EntryPoint {
                         "bly derived from their tombstones...</p>");
 
         RootPanel.get(EDITOR_CONTAINER_ID).add(mediumEditor);
+
+        Button sayBtn = new Button("Say it!");
+        sayBtn.addClickHandler((e) -> {
+            Logger.getLogger("").severe(mediumEditor.getText());
+        });
+
+        RootPanel.get(EDITOR_CONTAINER_ID).add(sayBtn);
     }
 }

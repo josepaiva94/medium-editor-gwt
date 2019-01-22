@@ -9,6 +9,19 @@ category highlighter).
 
 # Basic usage
 
+```xml
+    <repositories>
+        <repository>
+            <id>mediumeditorgwt</id>
+            <url>https://raw.github.com/josepaiva94/medium-editor-gwt/medium-editor-gwt-0.0.1</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+```
+
 ### Demo
 
 Run it
