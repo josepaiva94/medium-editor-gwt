@@ -89,6 +89,7 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
     @Override
     public void setHTML(String html) {
         editorElement.setInnerHTML(html);
+
         if (loaded)
             checkContentChanged();
     }
@@ -100,7 +101,16 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
 
     @Override
     public void setText(String text) {
-        editorElement.setInnerText(text);
+        String html = ("<p>" + text
+                .replaceAll("\n\n\n\n\n", "</p><p><br /></p><p>")
+                .replaceAll("\n\n", "</p><p>")
+                .replaceAll("\n", "<br />") + "</p>")
+                .replaceAll("<p></p>", "<p><br /></p>");
+
+        editorElement.setInnerHTML(html);
+
+        if (loaded)
+            checkContentChanged();
     }
 
     @Override
@@ -118,7 +128,7 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
     }-*/;
 
     public final native void checkContentChanged() /*-{
-
-        this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editor.checkContentChanged();
+        var editor = this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editor;
+        editor.checkContentChanged(this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editorElement);
     }-*/;
 }
