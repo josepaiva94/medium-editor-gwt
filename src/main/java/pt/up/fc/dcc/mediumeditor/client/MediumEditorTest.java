@@ -63,5 +63,9 @@ public class MediumEditorTest implements EntryPoint {
         });
 
         RootPanel.get(EDITOR_CONTAINER_ID).add(sayBtn);
+
+        mediumEditor.addValueChangeHandler((e) -> {
+            Logger.getLogger("").severe("on value change");
+        });
     }
 }

@@ -3,9 +3,16 @@ package pt.up.fc.dcc.mediumeditor.client;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.*;
 import pt.up.fc.dcc.mediumeditor.client.models.EditorOptions;
 import pt.up.fc.dcc.mediumeditor.client.resources.Resources;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A GWT widget for Medium Editor clone
@@ -13,7 +20,8 @@ import pt.up.fc.dcc.mediumeditor.client.resources.Resources;
  * @see <a href="https://github.com/josepaiva94/medium-editor">MediumEditor</a>
  * @author José Carlos Paiva <code>josepaiva94@gmail.com</code>
  */
-public class MediumEditor extends Composite implements HasHTML, RequiresResize {
+public class MediumEditor extends Composite
+        implements HasHTML, RequiresResize, HasValueChangeHandlers<String> {
     private static final String EDITOR_CSS_NAME = "editable";
 
     private static boolean loaded = false;
@@ -24,6 +32,8 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
 
     private String selector;
     private EditorOptions options;
+
+    private List<ValueChangeHandler<String>> valueChangeHandlers = new ArrayList<>();
 
     public MediumEditor(EditorOptions options) {
         this(null, options);
@@ -41,7 +51,7 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
         editorElement = editable.getElement();
 
         if (loaded)
-            editor = init(selector, options);
+            editor = init(editorElement, selector, options);
     }
 
     @Override
@@ -69,16 +79,39 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
                     .setRemoveTag(false)
                     .inject();
 
-            editor = init(selector, options);
-        }
+            editor = init(editorElement, selector, options);
+        } else
+            editor = init(editorElement, selector, options);
+
+        attachValueChangeHandler(editorElement);
 
         loaded = true;
     }
 
     private final native JavaScriptObject init(
+            Element element,
             String selector, EditorOptions options) /*-{
 
+        var editor = $wnd.MediumEditor.getEditorFromElement(element);
+        if (editor)
+            return editor;
+
         return new $wnd.MediumEditor(selector, options);
+    }-*/;
+
+    private final native void attachValueChangeHandler(
+            Element element) /*-{
+
+        var trigger = this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::triggerOnValueChange().bind(this);
+
+        // Options for the observer (which mutations to observe)
+        var config = { attributes: true, childList: true, subtree: true };
+
+        // Create an observer instance linked to the callback function
+        var observer = new MutationObserver(trigger);
+
+        // Start observing the target node for configured mutations
+        observer.observe(element, config);
     }-*/;
 
     @Override
@@ -102,9 +135,9 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
     @Override
     public void setText(String text) {
         String html = ("<p>" + text
-                .replaceAll("\n\n\n\n\n", "</p><p><br /></p><p>")
-                .replaceAll("\n\n", "</p><p>")
-                .replaceAll("\n", "<br />") + "</p>")
+                .replaceAll("\\R\\R\\R\\R\\R", "</p><p><br /></p><p>")
+                .replaceAll("\\R\\R", "</p><p>")
+                .replaceAll("\\R", "<br />") + "</p>")
                 .replaceAll("<p></p>", "<p><br /></p>");
 
         editorElement.setInnerHTML(html);
@@ -118,6 +151,23 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
 
     }
 
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+        int index = valueChangeHandlers.size();
+        valueChangeHandlers.add(handler);
+        return () -> valueChangeHandlers.remove(index);
+    }
+
+    public int countCharacters() {
+        String text = getText();
+        return text.length();
+    }
+
+    public int countWords() {
+        String text = getText();
+        return text.trim().replaceAll("\\s+", " ").split("\\s").length;
+    }
+
     private final native String getTextWithNewLines() /*-{
 
         var editor = this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editorElement;
@@ -126,6 +176,13 @@ public class MediumEditor extends Composite implements HasHTML, RequiresResize {
             .map(function (p) { return p.innerText.replace(/<br\s*[\/]?>/gi, '\n'); })
             .join('\n\n');
     }-*/;
+
+    private void triggerOnValueChange() {
+        String text = getText();
+        for (ValueChangeHandler<String> handler: valueChangeHandlers) {
+            handler.onValueChange(new ValueChangeEvent<String>(text) {});
+        }
+    }
 
     public final native void checkContentChanged() /*-{
         var editor = this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editor;
