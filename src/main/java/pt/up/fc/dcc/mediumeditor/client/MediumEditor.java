@@ -135,9 +135,9 @@ public class MediumEditor extends Composite
     @Override
     public void setText(String text) {
         String html = ("<p>" + text
-                .replaceAll("\\R\\R\\R\\R\\R", "</p><p><br /></p><p>")
-                .replaceAll("\\R\\R", "</p><p>")
-                .replaceAll("\\R", "<br />") + "</p>")
+                .replaceAll("\r?\n\r?\n\r?\n\r?\n\r?\n", "</p><p><br /></p><p>")
+                .replaceAll("\r?\n\r?\n", "</p><p>")
+                .replaceAll("\r?\n", "<br />") + "</p>")
                 .replaceAll("<p></p>", "<p><br /></p>");
 
         editorElement.setInnerHTML(html);
@@ -159,13 +159,16 @@ public class MediumEditor extends Composite
     }
 
     public int countCharacters() {
-        String text = getText();
+        String text = getText().trim();
         return text.length();
     }
 
     public int countWords() {
         String text = getText();
-        return text.trim().replaceAll("\\s+", " ").split("\\s").length;
+        text = text.trim().replaceAll("\\s+", " ");
+        if (text.isEmpty())
+            return 0;
+        return text.split("\\s").length;
     }
 
     private final native String getTextWithNewLines() /*-{
