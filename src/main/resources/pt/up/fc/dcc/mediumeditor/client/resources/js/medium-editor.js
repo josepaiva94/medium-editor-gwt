@@ -5188,18 +5188,13 @@ MediumEditor.extensions = {};
         },
 
         _removeEmotionHighlight: function (el) {
-            var elementAttrs = {};
-            this.emotions.levels.forEach(function (level) {
-                var attrValue = el.getAttribute('data-' + level);
-                if (attrValue) {
-                    elementAttrs['data-' + level] = attrValue;
-                }
+            var data = {};
+            [].forEach.call(el.attributes, function(attr) {
+                data[attr.name] = attr.value;
             });
-            elementAttrs['data-preview'] = el.getAttribute('data-preview');
-
             rangy.createClassApplier('emotion-highlight', { // jshint ignore:line
                 elementTagName: 'mark',
-                elementAttributes: elementAttrs,
+                elementAttributes: data,
                 normalize: true
             }).toggleSelection();
 
