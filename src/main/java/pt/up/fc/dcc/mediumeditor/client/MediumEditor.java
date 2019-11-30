@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import pt.up.fc.dcc.mediumeditor.client.models.EditorOptions;
 import pt.up.fc.dcc.mediumeditor.client.resources.Resources;
@@ -135,9 +136,10 @@ public class MediumEditor extends Composite
     @Override
     public void setText(String text) {
         String html = ("<p>" + text
-                .replaceAll("\r?\n\r?\n\r?\n\r?\n\r?\n", "</p><p><br /></p><p>")
-                .replaceAll("\r?\n\r?\n", "</p><p>")
-                .replaceAll("\r?\n", "<br />") + "</p>")
+                .replaceAll("(\r\n|\n)", "\n")
+                .replaceAll("\n\n\n\n\n", "</p><p><br /></p><p>")
+                .replaceAll("\n\n", "</p><p>")
+                .replaceAll("\n", "<br />") + "</p>")
                 .replaceAll("<p></p>", "<p><br /></p>");
 
         editorElement.setInnerHTML(html);
@@ -165,18 +167,52 @@ public class MediumEditor extends Composite
 
     public int countWords() {
         String text = getText();
-        text = text.trim().replaceAll("\\s+", " ");
+        if (text.endsWith("&nbsp;")) {
+            text = text.substring(0, text.length() - 6);
+        }
+        text = text
+                .replaceAll("[,.:;?!_\\[\\]()\"/*+%={}#$<>'«»\\\\|]", " ")
+                .replaceAll("\\s+", " ")
+                .trim();
         if (text.isEmpty())
             return 0;
-        return text.split("\\s").length;
+        return text.split("\\s+").length;
     }
 
     private final native String getTextWithNewLines() /*-{
-
         var editor = this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editorElement;
         var ps = editor.querySelectorAll('p');
         return Array.prototype.slice.call(ps)
-            .map(function (p) { return p.innerText.replace(/<br\s*[\/]?>/gi, '\n'); })
+            .map(function (p) {
+                var html = p.innerHTML;
+                var text = '';
+
+                var tags;
+                try { // direct childs only
+                    tags = p.querySelectorAll(':scope > *');
+                } catch (e) { // whatever, cross your fingers
+                    tags = p.querySelectorAll('*');
+                }
+
+                for (var j = 0; j < tags.length; j++) {
+                    var index = html.indexOf(tags[j].outerHTML);
+
+                    text += html.substr(0, index);
+
+                    html = html.slice(index);
+
+                    var tagName = tags[j].tagName.toLowerCase();
+                    if (tagName === 'br') {
+                        text += '\n';
+                    } else {
+                        text += tags[j].innerText;
+                    }
+
+                    html = html.slice(tags[j].outerHTML.length);
+                }
+
+                return text + html;
+            })
             .join('\n\n');
     }-*/;
 
@@ -189,6 +225,8 @@ public class MediumEditor extends Composite
 
     public final native void checkContentChanged() /*-{
         var editor = this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editor;
-        editor.checkContentChanged(this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editorElement);
+        editor.checkContentChanged(
+            this.@pt.up.fc.dcc.mediumeditor.client.MediumEditor::editorElement
+        );
     }-*/;
 }

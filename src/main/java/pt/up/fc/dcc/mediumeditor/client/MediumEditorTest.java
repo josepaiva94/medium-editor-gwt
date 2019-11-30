@@ -34,26 +34,22 @@ public class MediumEditorTest implements EntryPoint {
 
         MediumEditor mediumEditor = new MediumEditor(editorOptions);
 
-        mediumEditor.setHTML(
-                "<p>My father’s family name being Pirrip, and my Christian n" +
-                        "ame Philip, my infant tongue could make of both nam" +
-                        "es nothing longer or more <mark data-global=\"benev" +
-                        "olence\" data-intermediate=\"affection\" data-speci" +
-                        "fic=\"desire\" data-preview=\"Benevolence > Affecti" +
-                        "on > Desire\" class=\"emotion-highlight\">explicit<" +
-                        "/mark> than Pip. So, I called myself Pip, and came " +
-                        "to be called Pip.</p>" +
-                "<p>I give Pirrip as my father’s family name, on the authori" +
-                        "ty of his <mark data-global=\"safety\" data-interme" +
-                        "diate=\"courage\" data-specific=\"extroversion\" da" +
-                        "ta-preview=\"Safety > Courage > Extroversion\" clas" +
-                        "s=\"emotion-highlight\">tombstone</mark> and my sis" +
-                        "ter,—Mrs. Joe Gargery, who married the blacksmith. " +
-                        "As I never saw my father or my mother, and never sa" +
-                        "w any likeness of either of them (for their days we" +
-                        "re long before the days of photographs), my first f" +
-                        "ancies regarding what they were like were unreasona" +
-                        "bly derived from their tombstones...</p>");
+        mediumEditor.setText(
+                "My father’s family name being Pirrip, and my Christian name" +
+                        " Philip, my infant tongue could make of both names " +
+                        "nothing longer or more explicit than Pip. So, I cal" +
+                        "led myself Pip, and came to be called Pip.\n\nI giv" +
+                        "e Pirrip as my father’s family name, on the authori" +
+                        "ty of his tombstone and my sister,—Mrs. Joe Gargery" +
+                        ", who married the blacksmith.\nAs I never saw my fat" +
+                        "her or my mother, and never saw any likeness of eit" +
+                        "her of them (for their days were long before the da" +
+                        "ys of photographs), my first fancies regarding what" +
+                        " they were like were unreasonably derived from thei" +
+                        "r tombstones..."
+        );
+
+        mediumEditor.setText(mediumEditor.getText());
 
         RootPanel.get(EDITOR_CONTAINER_ID).add(mediumEditor);
 
@@ -63,6 +59,13 @@ public class MediumEditorTest implements EntryPoint {
         });
 
         RootPanel.get(EDITOR_CONTAINER_ID).add(sayBtn);
+
+        Button wcBtn = new Button("Word Count");
+        wcBtn.addClickHandler((e) -> {
+            Logger.getLogger("").severe("" + mediumEditor.countWords());
+        });
+
+        RootPanel.get(EDITOR_CONTAINER_ID).add(wcBtn);
 
         mediumEditor.addValueChangeHandler((e) -> {
             Logger.getLogger("").severe("on value change");
